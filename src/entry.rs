@@ -26,7 +26,7 @@ impl Entry {
     pub fn parse_entry(str: &str) -> Result<(Entry, u32), Box<dyn Error>> {
         let temp: Vec<&str> = str.split('\t').collect();
 
-        let artists = temp[0].split(';').map(|s| s.trim().to_string()).collect();
+        let artists = Entry::split_artists(temp[0]);
         let album = temp[1].to_string();
         let title = temp[2].to_string();
 
@@ -43,16 +43,32 @@ impl Entry {
         let timestamp: u32 = temp[6]
             .parse()
             .map_err(|_| format!("Failed to parse timestamp: {}", temp[6]))?;
-        Ok((
-            Entry {
-                artists,
-                album,
-                title,
-                track_num,
-                length,
-                rating,
-            },
-            timestamp,
-        ))
+
+        let entry = Entry {
+            artists,
+            album,
+            title,
+            track_num,
+            length,
+            rating,
+        };
+
+        Ok((entry, timestamp))
+    }
+
+    fn split_artists(input: &str) -> Vec<String> {
+        let delimiters = [",", ";", "&", "ft.", "featuring", "feat."];
+
+        delimiters
+            .iter()
+            .fold(vec![input.to_string()], |acc, delimiter| {
+                acc.into_iter()
+                    .flat_map(|s| {
+                        s.split(delimiter)
+                            .map(|s| s.trim().to_string())
+                            .collect::<Vec<_>>()
+                    })
+                    .collect()
+            })
     }
 }
