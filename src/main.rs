@@ -1,8 +1,8 @@
 use std::error::Error;
 
 use chrono::{Datelike, Utc};
-use scrobbler::{organize_per_album, organize_per_artist, parse_file};
-use utils::filter_songs_played_year;
+use scrobbler::{organize_per_album, organize_per_artist, organize_per_artist_albums, parse_file};
+use utils::{filter_songs_played_year, get_plays};
 
 const FILE_PATH: &str = ".scrobbler.log";
 
@@ -16,6 +16,14 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let albums = organize_per_album(&songs);
     let artists = organize_per_artist(&songs);
+    let artists_albums = organize_per_artist_albums(&artists);
 
+    for (k, v) in artists_albums {
+        for (album, songs) in v {
+            println!("{} {} - {}", k, album, get_plays(&songs));
+        }
+    }
+
+    println!("{}", get_plays(&albums["The Bends"]));
     Ok(())
 }

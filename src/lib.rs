@@ -85,3 +85,23 @@ pub fn organize_per_artist(entries: &Vec<Song>) -> HashMap<String, Vec<&Song>> {
 
     per_artist
 }
+
+pub fn organize_per_artist_albums<'a>(
+    entries: &HashMap<String, Vec<&'a Song>>,
+) -> HashMap<String, HashMap<String, Vec<&'a Song>>> {
+    let mut per_artist_album: HashMap<String, HashMap<String, Vec<&'a Song>>> = HashMap::new();
+
+    entries.iter().for_each(|(artist, songs)| {
+        let entry = per_artist_album
+            .entry(artist.clone())
+            .or_insert(HashMap::new());
+        songs.iter().for_each(|song| {
+            entry
+                .entry(song.entry.album.clone())
+                .or_insert(vec![])
+                .push(song);
+        });
+    });
+
+    per_artist_album
+}
