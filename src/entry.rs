@@ -22,7 +22,6 @@ impl fmt::Display for Entry {
 }
 
 impl Entry {
-    #[allow(dead_code)]
     pub fn parse_entry(str: &str) -> Result<(Entry, u32), Box<dyn Error>> {
         let temp: Vec<&str> = str.split('\t').collect();
 

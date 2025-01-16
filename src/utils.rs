@@ -1,7 +1,6 @@
-use scrobbler::{get_end_year, get_start_year, Song, SortOrder};
+use crate::{Song, SortOrder, get_end_year, get_start_year};
 use std::{cmp::Reverse, collections::HashMap};
 
-#[allow(dead_code)]
 fn get_time_listened_song(song: &Song) -> u32 {
     (*song).entry.length * (*song).timestamps.len() as u32
 }
@@ -11,8 +10,6 @@ fn get_plays_song(song: &Song) -> usize {
     song.timestamps.len()
 }
 
-
-#[allow(dead_code)]
 pub fn sort_songs_by_plays<'a, T>(entries: &'a [T], order: SortOrder) -> Vec<&'a Song>
 where
     T: AsRef<Song>,
@@ -31,9 +28,8 @@ where
     refs
 }
 
-#[allow(dead_code)]
 pub fn sort_map_by_plays<T>(
-    entries: &HashMap<String,  Vec<&T>>,
+    entries: &HashMap<String, Vec<&T>>,
     order: SortOrder,
 ) -> Vec<(String, usize)>
 where
@@ -73,8 +69,6 @@ pub fn filter_songs_played_year<'a>(entries: &'a [Song], year: i32) -> Vec<&'a S
         .collect()
 }
 
-
-#[allow(dead_code)]
 pub fn get_minutes_listened<T: AsRef<Song>>(entries: &[T]) -> u32 {
     entries
         .iter()
@@ -83,11 +77,9 @@ pub fn get_minutes_listened<T: AsRef<Song>>(entries: &[T]) -> u32 {
         / 60
 }
 
-#[allow(dead_code)]
 pub fn get_plays<T: AsRef<Song>>(entries: &[T]) -> usize {
     entries
         .iter()
         .map(|song| get_plays_song(song.as_ref()))
         .sum::<usize>()
-        
 }

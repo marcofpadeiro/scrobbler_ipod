@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs::read_to_string;
@@ -6,6 +7,7 @@ use chrono::{TimeZone, Utc};
 use entry::Entry;
 
 mod entry;
+mod utils;
 
 #[derive(Clone)]
 pub struct Song {
