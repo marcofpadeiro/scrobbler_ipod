@@ -13,6 +13,18 @@ pub struct Song {
     pub timestamps: Vec<u32>,
 }
 
+impl AsRef<Song> for Song {
+    fn as_ref(&self) -> &Song {
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum SortOrder {
+    Asc,
+    Desc,
+}
+
 pub fn parse_file(file: &str) -> Result<Vec<Song>, Box<dyn Error>> {
     let mut songs_map: HashMap<Entry, Vec<u32>> = HashMap::new();
 
@@ -47,27 +59,27 @@ pub fn get_end_year(year: i32) -> u32 {
         .timestamp() as u32
 }
 
-pub fn organize_per_album(entries: &Vec<Song>) -> HashMap<String, Vec<Song>> {
-    let mut per_album: HashMap<String, Vec<Song>> = HashMap::new();
+pub fn organize_per_album(entries: &Vec<Song>) -> HashMap<String, Vec<&Song>> {
+    let mut per_album: HashMap<String, Vec<&Song>> = HashMap::new();
 
     for entry in entries {
         per_album
             .entry(entry.entry.album.clone())
             .or_insert_with(Vec::new)
-            .push(entry.clone());
+            .push(entry);
     }
     per_album
 }
 
-pub fn organize_per_artist(entries: &Vec<Song>) -> HashMap<String, Vec<Song>> {
-    let mut per_artist: HashMap<String, Vec<Song>> = HashMap::new();
+pub fn organize_per_artist(entries: &Vec<Song>) -> HashMap<String, Vec<&Song>> {
+    let mut per_artist: HashMap<String, Vec<&Song>> = HashMap::new();
 
     entries.iter().for_each(|entry| {
         entry.entry.artists.iter().for_each(|artist| {
             per_artist
                 .entry(artist.clone())
                 .or_insert_with(Vec::new)
-                .push(entry.clone());
+                .push(entry);
         });
     });
 
